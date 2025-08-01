@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Game from './components/Game';
 import StartModal from './components/StartModal';
 import GameOverModal from './components/GameOverModal';
@@ -28,12 +28,25 @@ export default function App() {
   const [lives, setLives] = useState(5);
   // When true the game is over and we show the game over modal.
   const [gameOver, setGameOver] = useState(false);
+  // Shared AudioContext for all sound effects.  This is created once
+  // when the user starts the game to comply with browser autoplay policies.
+  const audioCtxRef = useRef(null);
 
   /**
    * Begin a new game session.  Reset scores and lives.  We also clear
    * any game over state so the Game component can mount.
    */
   const handleStart = () => {
+    // Create a new AudioContext on the first user interaction.  This is
+    // necessary for browsers that block audio until a user gesture.
+    if (!audioCtxRef.current) {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtxRef.current = new AudioContext();
+      } catch (err) {
+        console.warn('AudioContext not supported:', err);
+      }
+    }
     setScore(0);
     setLives(5);
     setGameStarted(true);
@@ -51,33 +64,25 @@ export default function App() {
    * @param {number} duration The duration of the tone in milliseconds.
    */
   function playTone(frequency, duration) {
-    try {
-      const AudioContext = window.AudioContext || window.webkitAudioContext;
-      const ctx = new AudioContext();
-      const oscillator = ctx.createOscillator();
-      const gain = ctx.createGain();
-      oscillator.type = 'sine';
-      oscillator.frequency.value = frequency;
-      oscillator.connect(gain);
-      gain.connect(ctx.destination);
-      // Start the oscillator immediately
-      oscillator.start();
-      // Fade the gain out exponentially
-      gain.gain.setValueAtTime(1, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(
-        0.001,
-        ctx.currentTime + duration / 1000
-      );
-      // Stop after the duration
-      oscillator.stop(ctx.currentTime + duration / 1000);
-      // Close the context after the tone finishes to free resources
-      setTimeout(() => ctx.close(), duration + 50);
-    } catch (err) {
-      // If the environment does not support AudioContext (e.g. some
-      // browsers with autoplay restrictions), silently ignore the
-      // error so the game still functions without audio.
-      console.warn('AudioContext error:', err);
-    }
+    const ctx = audioCtxRef.current;
+    if (!ctx) return;
+
+    const oscillator = ctx.createOscillator();
+    const gain = ctx.createGain();
+    oscillator.type = 'sine';
+    oscillator.frequency.value = frequency;
+    oscillator.connect(gain);
+    gain.connect(ctx.destination);
+    // Start the oscillator immediately
+    oscillator.start();
+    // Fade the gain out exponentially
+    gain.gain.setValueAtTime(1, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(
+      0.001,
+      ctx.currentTime + duration / 1000
+    );
+    // Stop after the duration
+    oscillator.stop(ctx.currentTime + duration / 1000);
   }
 
   /**
