@@ -222,3 +222,12 @@ canvas.game-canvas {
     padding: 0.55rem 1rem;
   }
 }
+
+.version-text {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  font-family: monospace;
+  color: #888;
+  font-size: 0.8rem;
+}

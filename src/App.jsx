@@ -205,6 +205,7 @@ export default function App() {
           onRestart={handleRestart}
         />
       )}
+      <div className="version-text">V1.0</div>
     </div>
   );
 }
