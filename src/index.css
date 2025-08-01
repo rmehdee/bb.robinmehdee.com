@@ -1,0 +1,223 @@
+/*
+ * Global stylesheet for the basketball mini‑game.
+ *
+ * The game uses a dark colour scheme and minimal styling inspired by the
+ * shadcn UI library.  Because this project doesn't depend on Tailwind
+ * or any CSS framework, the classes defined here are hand crafted to
+ * emulate the look of shadcn components – dark panels, light text and
+ * subtle shadows.  Feel free to tweak these values if you want to
+ * customise the look later.
+ */
+
+/* Apply a border box model so widths/heights include padding and border. */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  background-color: #0f0f0f;
+  color: #eaeaea;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+/* Root container ensures the game takes the full viewport. */
+.app-container {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 1rem;
+}
+
+/* Canvas styling: full size and no outline. */
+canvas.game-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Scoreboard panel. */
+.scoreboard {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background-color: rgba(24, 24, 24, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.scoreboard span.label {
+  font-weight: bold;
+  margin-right: 0.25rem;
+}
+
+/* Lives indicator (small circles). */
+.lives {
+  display: flex;
+  gap: 0.25rem;
+  margin-top: 0.25rem;
+}
+
+.life {
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 50%;
+  background-color: #e63946;
+}
+
+/* Score and lives row shown above the game area */
+.score-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background-color: rgba(24, 24, 24, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+  width: 100%;
+  max-width: 600px;
+  justify-content: space-between;
+}
+
+/* Instruction text inside the score row */
+.instruction-text {
+  flex: 1;
+  text-align: right;
+  font-size: 0.8rem;
+  color: #999;
+}
+
+/* Bordered game area where the canvas lives */
+.game-area {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  height: 70vh;
+  max-height: 600px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Modal overlay: dark translucent backdrop. */
+.modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+/* Modal card: central container for start/game over screens. */
+.modal-card {
+  background-color: #1a1a1a;
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+  max-width: 90%;
+  width: 22rem;
+  text-align: center;
+}
+
+.modal-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: #f5f5f5;
+}
+
+.modal-description {
+  font-size: 1rem;
+  margin-bottom: 1.25rem;
+  line-height: 1.4;
+  color: #cccccc;
+}
+
+/* Button styled to resemble shadcn's default button. */
+.ui-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 1.25rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.15s, transform 0.1s;
+  background-color: #2e2e2e;
+  color: #f5f5f5;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.ui-button:hover {
+  background-color: #3a3a3a;
+}
+
+.ui-button:active {
+  transform: translateY(1px);
+}
+
+/* Instruction overlay shown on the first shot.  Positioned near
+   the bottom centre of the screen with a subtle animation effect. */
+.instruction-overlay {
+  position: absolute;
+  bottom: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+  color: #ccc;
+  backdrop-filter: blur(4px);
+  pointer-events: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive typography tweaks for smaller screens. */
+@media (max-width: 480px) {
+  .modal-card {
+    width: 90%;
+  }
+  .modal-title {
+    font-size: 1.5rem;
+  }
+  .modal-description {
+    font-size: 0.9rem;
+  }
+  .ui-button {
+    font-size: 0.85rem;
+    padding: 0.55rem 1rem;
+  }
+}
