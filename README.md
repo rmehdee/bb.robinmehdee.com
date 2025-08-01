@@ -7,8 +7,11 @@ This repository contains a simple yet polished basketball shooting game built wi
 To run the game locally you need Node.js installed. Clone this repository, install dependencies and start the development server:
 
 git clone https://github.com/your‑username/basketball-mini-game.git
+
 cd basketball-mini-game
+
 npm install
+
 npm run dev
 
 Enjoy
